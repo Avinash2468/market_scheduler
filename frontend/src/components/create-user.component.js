@@ -9,7 +9,8 @@ export default class CreateUser extends Component {
         this.state = {
             username: '',
             password: '',
-            user_type: ''  
+            confirm_password:'',
+            user_type: ''
         }
 
         this.onChangeUsername = this.onChangeUsername.bind(this);
@@ -43,7 +44,7 @@ export default class CreateUser extends Component {
         console.log(newUser.user_type)
 
         axios.post('http://localhost:4000/add', newUser)
-            .then(res =>{ 
+            .then(res =>{
                 console.log(res.data.msg);
                 alert(res.data.msg)
             });
@@ -57,7 +58,7 @@ export default class CreateUser extends Component {
 
     render() {
         return (
-            
+
             <div>
                 <h1>REGISTRATION PAGE</h1>
                 <form onSubmit={this.onSubmit}>
@@ -69,7 +70,7 @@ export default class CreateUser extends Component {
                             onChange={this.onChangeUsername}
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label>Password: </label>
                         <input type="text"
@@ -92,7 +93,7 @@ export default class CreateUser extends Component {
                             Buyer
                         </label>
                      </div>
-                     <div className="form-group">   
+                     <div className="form-group">
                         <label>
                             <input
                                 type="radio"
