@@ -1,42 +1,162 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 export default class reg_buyer extends Component {
 
-    constructor(props) {
-        super(props);
-        }
+  constructor(props) {
+      super(props);
+
+      this.state = {
+          username: '',
+          password: '',
+          secondpassword: '',
+          email: '',
+          phone: '',
+          address:'',
+          pincode:''
+      }
+
+      this.onChangeUsername = this.onChangeUsername.bind(this);
+      this.onChangepassword = this.onChangepassword.bind(this);
+      this.onChangesecondpassword = this.onChangesecondpassword.bind(this);
+      this.onChangeemail = this.onChangeemail.bind(this);
+      this.onChangephone = this.onChangephone.bind(this);
+      this.onChangeaddress = this.onChangeaddress.bind(this);
+      this.onChangepincode = this.onChangepincode.bind(this);
+      this.onSubmit = this.onSubmit.bind(this);
+  }
+
+
+  onChangeUsername(event) {
+      this.setState({ username: event.target.value });
+  }
+
+  onChangepassword(event) {
+      this.setState({ password: event.target.value });
+  }
+
+  onChangesecondpassword(event) {
+      this.setState({ secondpassword: event.target.value });
+  }
+
+  onChangeemail(event) {
+      this.setState({ email: event.target.value });
+  }
+
+  onChangephone(event) {
+      this.setState({ phone: event.target.value });
+  }
+
+  onChangeaddress(event) {
+      this.setState({address: event.target.value });
+  }
+
+  onChangepincode(event) {
+      this.setState({ pincode: event.target.value });
+  }
+
+  onSubmit(e) {
+      e.preventDefault();
+
+      const newUser = {
+          username: this.state.username,
+          password: this.state.password,
+          secondpassword: this.state.secondpassword,
+          email: this.state.email,
+          phone: this.state.phone,
+          address:this.state.address,
+          pincode:this.state.pincode
+      }
+      console.log(newUser.user_type)
+
+      axios.post('http://localhost:4000/add', newUser)
+          .then(res =>{
+              console.log(res.data.msg);
+              alert(res.data.msg)
+          });
+
+      this.setState({
+          username: '',
+          password: '',
+          secondpassword: '',
+          email: '',
+          phone: '',
+          address:'',
+          pincode:''
+      });
+  }
+
 
     render() {
         return (
           <div>
-            <div class="form-group">
-             <label for="usr">Name:</label>
-             <input type="text" class="form-control" id="usr"/>
-            </div>
-            <div class="form-group">
-             <label for="pwd">Password:</label>
-             <input type="password" class="form-control" id="pwd"/>
-            </div>
-            <div class="form-group">
-             <label for="re-pwd">Re-enter password:</label>
-             <input type="password" class="form-control" id="re-pwd"/>
-            </div>
-            <div class="form-group">
-             <label for="email">Email address:</label>
-             <input type="text" class="form-control" id="email"/>
-            </div>
-            <div class="form-group">
-             <label for="phone">Phone Number:</label>
-             <input type="text" class="form-control" id="phone"/>
-            </div>
-            <div class="form-group">
-             <label for="address">Address:</label>
-             <input type="text" class="form-control" id="address"/>
-            </div>
-            <div class="form-group">
-             <label for="pincode">Pincode:</label>
-             <input type="text" class="form-control" id="pincode"/>
-            </div>
+              <form onSubmit={this.onSubmit}>
+                <div className="form-group">
+                    <label>Username: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.username}
+                        onChange={this.onChangeUsername}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Password: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.password}
+                        onChange={this.onChangepassword}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Re-enter Password: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.secondpassword}
+                        onChange={this.onChangesecondpassword}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Email: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.email}
+                        onChange={this.onChangeemail}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Phone Number: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.phone}
+                        onChange={this.onChangephone}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Address: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.address}
+                        onChange={this.onChangeaddress}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Pincode: </label>
+                    <input type="text"
+                        className="form-control"
+                        value={this.state.pincode}
+                        onChange={this.onChangepincode}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <input type="submit" value="Create User" className="btn btn-primary" />
+                </div>
+            </form>
           </div>
         )
     }

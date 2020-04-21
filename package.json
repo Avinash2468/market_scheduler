@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Avinash2468/market_scheduler/issues"
   },
-  "homepage": "https://github.com/Avinash2468/market_scheduler#readme"
+  "homepage": "https://github.com/Avinash2468/market_scheduler#readme",
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
 }
