@@ -12,7 +12,7 @@ const userRoutes = express.Router();
 
 let Buyer = require('./models/buyer');
 let Seller = require('./models/seller');
-//let Products = require('./models/products');
+let Products = require('./models/products');
 //let Bookings = require('./models/bookings');
 //let Reviews = require('./models/reviews');
 
@@ -41,7 +41,7 @@ userRoutes.route('/').get(function (req, res) {
 });
 
 // Adding a new user
-userRoutes.route('/add').post(function (req, res) {
+userRoutes.route('/buyer').post(function (req, res) {
 
     let send={
         status:"-1",
@@ -50,31 +50,27 @@ userRoutes.route('/add').post(function (req, res) {
 
     //let user = new User(req.body);
 
-    const { username, password,confirm_password, user_type ,shopname,email,phone,address,pincode} = req.body;
-    if (!username || !password || !confirm_password|| !user_type || !email || !phone || !address || !pincode) {
+    const { username, password,confirm_password ,email,phone,address,pincode} = req.body;
+    if (!username || !password || !confirm_password || !email || !phone || !address || !pincode) {
         send.msg="Incomplete fields";
         send.status="2";
         res.json(send)
     }
-        if(user_type=='Seller' && !shopname){
-             send.msg="Incomplete fields";
-        send.status="2";
-        res.json(send)
 
-        }
-        else if(password!=confirm_password){
+       else if(password!=confirm_password){
         send.msg = "Password didn't match";
         send.status=1;
         res.json(send)
     }
 
-    else if (user_type=='Buyer'){
+    else if(password==confirm_password){
     Buyer.findOne({ username })
         .then(user => {
             if (user) {
                 send.msg="Username exists already";
                 send.status="3";
                 res.json(send)
+                return;
             }
 
             const newuser = new Buyer({
@@ -103,13 +99,43 @@ userRoutes.route('/add').post(function (req, res) {
         })
     }
 
-    else if (user_type=='Seller'){
+
+
+});
+
+
+// Adding a new user
+userRoutes.route('/seller').post(function (req, res) {
+
+    let send={
+        status:"-1",
+        msg:"temp"
+    };
+
+    //let user = new User(req.body);
+
+    const { username, password,confirm_password ,shopname,email,phone,address,pincode} = req.body;
+    if (!username || !password || !confirm_password || !email || !phone || !address || !pincode || !shopname) {
+        send.msg="Incomplete fields";
+        send.status="2";
+        res.json(send)
+    }
+ 
+        else if(password!=confirm_password){
+        send.msg = "Password didn't match";
+        send.status=1;
+        res.json(send)
+    }
+
+
+    else if (password==confirm_password){
     Seller.findOne({ username })
         .then(user => {
             if (user) {
                 send.msg="Username exists already";
                 send.status="3";
                 res.json(send)
+                return;
             }
 
             const newuser = new Seller({
@@ -141,6 +167,8 @@ userRoutes.route('/add').post(function (req, res) {
 
 });
 
+
+
 // Login an existing user
 userRoutes.route('/login').post(function (req, res) {
 
@@ -150,10 +178,13 @@ userRoutes.route('/login').post(function (req, res) {
         type:""
     };
 
-    let Username = req.body.username;
+   //const {Username,Password,user_type}=req.body;
+      let Username = req.body.username;
     let Password = req.body.password;
-
-    User.findOne({ username: Username })
+    let user_type = req.body.user_type;
+    
+    if(user_type=='Buyer'){
+    Buyer.findOne({ username: Username })
         .then(user => {
             if (!user) {
                 send.msg="User does not exist";
@@ -177,8 +208,149 @@ userRoutes.route('/login').post(function (req, res) {
                     }
                 })
         })
+    }
+    else if(user_type=='Seller'){
+        Seller.findOne({ username: Username })
+        .then(user => {
+            if (!user) {
+                send.msg="User does not exist";
+                send.status="2";
+                res.json(send)
+            }
+
+            bcrypt.compare(Password, user.password)
+                .then(isMatch => {
+                    if (!isMatch) {
+                        send.msg="Wrong password";
+                        send.status="3";
+                        res.json(send)
+                    }
+
+                    else{
+                        send.msg="Credentials Valid";
+                        send.status="0";
+                        send.type=user.user_type
+                        res.json(send)
+                    }
+                })
+        })
+    }
+});
+
+//seller to add product
+userRoutes.route('/seller/addproduct').post(function(req,res){
+
+    let send={
+        status:"-1",
+        msg:"temp"
+    };
+
+    const { name,price,company,quantity,items_left, seller_id } = req.body;
+
+    // all fields need to be present
+    if (!name || !quantity || !price || !seller_id || !items_left) {
+        send.msg="Incomplete fields";
+        send.status="2";
+        res.json(send)
+        return;
+    }
+
+    //Products.find
+    Products.find({name: name,company:company,quantity: quantity, seller_name: seller_id} ,function(err,item){
+        if(err){
+        
+            console.log(err);
+        }
+        else{
+       
+                if (!item) {
+                            send.msg="Product exists already with this name registered by you - if want to update please click update button";
+                            send.status="3";
+                            res.json(send)
+                }
+
+                else{
+                    const newitem = new Products({
+                        name,
+                        price,
+                        company,
+                        quantity,
+                        items_left,
+                        seller_id,
+                        status:"Available"
+
+                    });
+                             
+                    newitem.save()
+                     send.msg="yes bitch";
+                            send.status="0";
+                            res.json(send)
+                            return;
+                    /*send.status = 0;
+                    send.msg = "Successfully Added Product";
+                    res.json(msg)*/
+
+
+                }
+        }
+
+    });
+
 
 });
+
+userRoutes.route("/seller/update").post(function(req,res){
+
+    let send={
+        status:"-1",
+        msg:"temp"
+    };
+
+    const { name,price,company,quantity,items_left, seller_id } = req.body;
+
+    // all fields need to be present
+    if (!name || !quantity || !price || !seller_id) {
+        send.msg="Incomplete fields";
+        send.status="2";
+        res.json(send)
+    }
+
+     Products.findOneAndUpdate({name: name,company:company,quantity: quantity, seller_name: seller_id}, function(err, product) {
+        if (err){
+            console.log(err);
+            send.status=1;
+            send.msg="Error in updating , try again";
+            res.json(send)
+        }
+        else { 
+            //product.status="wtf";
+            send.status=0;
+            send.msg="Successfully updated";
+            res.json(send)  
+        }
+    });
+
+
+
+});
+
+
+
+
+//giving buyers list of seller in town
+userRoutes.route('/buyer/view').post(function (req, res){
+   let send={
+        status:"-1",
+        msg:"temp"
+    };
+    const {pincode}=req.body;
+    Seller.find({pincode:pincode},function(err,users){
+        if(err) throw err;
+        res.json(users);
+    });
+
+});
+
 
 
 
