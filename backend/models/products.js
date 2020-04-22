@@ -7,10 +7,13 @@ let Products = new mongoose.Schema({
     price: {
         type: Number 
     },
-    quantity: {
-        type: Number
+    company: {
+        type: String
     },
-    quantity_left: {
+    quantity:{
+        type:Number
+    },
+    items_left: {
         type: Number
     },
     seller_id:{
