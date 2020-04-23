@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
 let Buyer = new mongoose.Schema({
+  user_type: {
+    type: String
+  },
     username: {
         type: String
     },
     password: {
-        type: String 
+        type: String
     },
     //user_type: {
 //    type: String

@@ -6,9 +6,10 @@ export default class reg_buyer extends Component {
       super(props);
 
       this.state = {
+          user_type:'Buyer',
           username: '',
           password: '',
-          secondpassword: '',
+          confirm_password: '',
           email: '',
           phone: '',
           address:'',
@@ -17,7 +18,7 @@ export default class reg_buyer extends Component {
 
       this.onChangeUsername = this.onChangeUsername.bind(this);
       this.onChangepassword = this.onChangepassword.bind(this);
-      this.onChangesecondpassword = this.onChangesecondpassword.bind(this);
+      this.onChangeconfirm_password = this.onChangeconfirm_password.bind(this);
       this.onChangeemail = this.onChangeemail.bind(this);
       this.onChangephone = this.onChangephone.bind(this);
       this.onChangeaddress = this.onChangeaddress.bind(this);
@@ -34,8 +35,8 @@ export default class reg_buyer extends Component {
       this.setState({ password: event.target.value });
   }
 
-  onChangesecondpassword(event) {
-      this.setState({ secondpassword: event.target.value });
+  onChangeconfirm_password(event) {
+      this.setState({ confirm_password: event.target.value });
   }
 
   onChangeemail(event) {
@@ -58,9 +59,10 @@ export default class reg_buyer extends Component {
       e.preventDefault();
 
       const newUser = {
+          user_type:this.state.user_type,
           username: this.state.username,
           password: this.state.password,
-          secondpassword: this.state.secondpassword,
+          confirm_password: this.state.confirm_password,
           email: this.state.email,
           phone: this.state.phone,
           address:this.state.address,
@@ -68,16 +70,17 @@ export default class reg_buyer extends Component {
       }
       console.log(newUser.user_type)
 
-      axios.post('http://localhost:4000/add', newUser)
+      axios.post('http://localhost:4000/buyer', newUser)
           .then(res =>{
               console.log(res.data.msg);
               alert(res.data.msg)
           });
 
       this.setState({
+          user_type:'Buyer',
           username: '',
           password: '',
-          secondpassword: '',
+          confirm_password: '',
           email: '',
           phone: '',
           address:'',
@@ -112,8 +115,8 @@ export default class reg_buyer extends Component {
                     <label>Re-enter Password: </label>
                     <input type="text"
                         className="form-control"
-                        value={this.state.secondpassword}
-                        onChange={this.onChangesecondpassword}
+                        value={this.state.confirm_password}
+                        onChange={this.onChangeconfirm_password}
                     />
                 </div>
 

@@ -13,6 +13,7 @@ export default class Login extends Component {
 
       this.onChangeUsername = this.onChangeUsername.bind(this);
       this.onChangepassword = this.onChangepassword.bind(this);
+      this.onChangeuser_type = this.onChangeuser_type.bind(this);
       this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -29,12 +30,17 @@ export default class Login extends Component {
       this.setState({ password: event.target.value });
   }
 
+  onChangeuser_type(event) {
+      this.setState({ user_type: event.target.value });
+  }
+
   onSubmit(e) {
       e.preventDefault();
 
       const newUser = {
           username: this.state.username,
-          password: this.state.password
+          password: this.state.password,
+          user_type:this.state.user_type
       }
 
 
@@ -57,7 +63,8 @@ export default class Login extends Component {
 
       this.setState({
           username: '',
-          password: ''
+          password: '',
+          user_type:''
       });
         }
 
@@ -82,34 +89,14 @@ export default class Login extends Component {
                           onChange={this.onChangepassword}
                       />
                   </div>
-                  {/*
                   <div className="form-group">
-                      <label>
-                          <input
-                              type="radio"
-                              name="react-tips"
-                              value="Buyer"
-                              checked={this.state.user_type === "Buyer"}
-                              onChange={this.handleOptionChange}
-                              className="form-check-input"
-                          />
-                          Buyer
-                      </label>
+                      <label>User Type: </label>
+                      <input type="text"
+                          className="form-control"
+                          value={this.state.user_type}
+                          onChange={this.onChangeuser_type}
+                      />
                   </div>
-                  <div className="form-group">
-                      <label>
-                          <input
-                              type="radio"
-                              name="react-tips"
-                              value="Seller"
-                              checked={this.state.user_type === "Seller"}
-                              onChange={this.handleOptionChange}
-                              className="form-check-input"
-                          />
-                          Seller
-                      </label>
-                  </div> */}
-
                   <div className="form-group">
                       <input type="submit" value="Login" className="btn btn-primary" />
                   </div>

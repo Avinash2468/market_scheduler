@@ -20,8 +20,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connection to mongodb
-mongoose.connect('mongodb+srv://rahul0805:rahul0805@bioproj-jbih7.gcp.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
-// mongoose.connect('mongodb://127.0.0.1:27017/products', { useNewUrlParser: true });
+//mongoose.connect(' mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb', { useNewUrlParser: true });
+ mongoose.connect('mongodb://127.0.0.1:27017/users', { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function () {
     console.log("MongoDB database connection established succesfully.");
@@ -50,8 +50,8 @@ userRoutes.route('/buyer').post(function (req, res) {
 
     //let user = new User(req.body);
 
-    const { username, password,confirm_password ,email,phone,address,pincode} = req.body;
-    if (!username || !password || !confirm_password || !email || !phone || !address || !pincode) {
+    const { user_type,username, password,confirm_password ,email,phone,address,pincode} = req.body;
+    if (!user_type || !username || !password || !confirm_password || !email || !phone || !address || !pincode) {
         send.msg="Incomplete fields";
         send.status="2";
         res.json(send)
@@ -74,7 +74,8 @@ userRoutes.route('/buyer').post(function (req, res) {
             }
 
             const newuser = new Buyer({
-               username,
+                user_type,
+                username,
                 password,
                 email,
                 phone,
@@ -93,8 +94,8 @@ userRoutes.route('/buyer').post(function (req, res) {
                     send.msg="Successfully Added";
                     send.status="0";
                     res.json(send)
-                    
-                })      
+
+                })
             })
         })
     }
@@ -114,13 +115,13 @@ userRoutes.route('/seller').post(function (req, res) {
 
     //let user = new User(req.body);
 
-    const { username, password,confirm_password ,shopname,email,phone,address,pincode} = req.body;
-    if (!username || !password || !confirm_password || !email || !phone || !address || !pincode || !shopname) {
+    const { user_type,username, password,confirm_password ,shopname,email,phone,address,pincode} = req.body;
+    if (!user_type || !username || !password || !confirm_password || !email || !phone || !address || !pincode || !shopname) {
         send.msg="Incomplete fields";
         send.status="2";
         res.json(send)
     }
- 
+
         else if(password!=confirm_password){
         send.msg = "Password didn't match";
         send.status=1;
@@ -139,6 +140,7 @@ userRoutes.route('/seller').post(function (req, res) {
             }
 
             const newuser = new Seller({
+                user_type,
                username,
                 password,
                 shopname,
@@ -159,8 +161,8 @@ userRoutes.route('/seller').post(function (req, res) {
                     send.msg="Successfully Added";
                     send.status="0";
                     res.json(send)
-                    
-                })      
+
+                })
             })
         })
     }
@@ -179,10 +181,10 @@ userRoutes.route('/login').post(function (req, res) {
     };
 
    //const {Username,Password,user_type}=req.body;
-      let Username = req.body.username;
+    let Username = req.body.username;
     let Password = req.body.password;
     let user_type = req.body.user_type;
-    
+
     if(user_type=='Buyer'){
     Buyer.findOne({ username: Username })
         .then(user => {
@@ -203,7 +205,7 @@ userRoutes.route('/login').post(function (req, res) {
                     else{
                         send.msg="Credentials Valid";
                         send.status="0";
-                        send.type=user.user_type
+                        send.type=user.user_type;
                         res.json(send)
                     }
                 })
@@ -258,11 +260,11 @@ userRoutes.route('/seller/addproduct').post(function(req,res){
     //Products.find
     Products.find({name: name,company:company,quantity: quantity, seller_name: seller_id} ,function(err,item){
         if(err){
-        
+
             console.log(err);
         }
         else{
-       
+
                 if (!item) {
                             send.msg="Product exists already with this name registered by you - if want to update please click update button";
                             send.status="3";
@@ -280,7 +282,7 @@ userRoutes.route('/seller/addproduct').post(function(req,res){
                         status:"Available"
 
                     });
-                             
+
                     newitem.save()
                      send.msg="yes bitch";
                             send.status="0";
@@ -322,11 +324,11 @@ userRoutes.route("/seller/update").post(function(req,res){
             send.msg="Error in updating , try again";
             res.json(send)
         }
-        else { 
+        else {
             //product.status="wtf";
             send.status=0;
             send.msg="Successfully updated";
-            res.json(send)  
+            res.json(send)
         }
     });
 

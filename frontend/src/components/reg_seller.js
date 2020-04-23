@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-export default class reg_buyer extends Component {
+export default class reg_seller extends Component {
 
   constructor(props) {
       super(props);
 
       this.state = {
+          user_type:'Seller',
           username: '',
           password: '',
-          secondpassword: '',
+          confirm_password: '',
+          shopname: '',
           email: '',
-          shop: '',
           phone: '',
           address:'',
           pincode:''
@@ -18,9 +19,9 @@ export default class reg_buyer extends Component {
 
       this.onChangeUsername = this.onChangeUsername.bind(this);
       this.onChangepassword = this.onChangepassword.bind(this);
-      this.onChangesecondpassword = this.onChangesecondpassword.bind(this);
+      this.onChangeconfirm_password = this.onChangeconfirm_password.bind(this);
       this.onChangeemail = this.onChangeemail.bind(this);
-      this.onChangeshop = this.onChangeshop.bind(this);
+      this.onChangeshopname = this.onChangeshopname.bind(this);
       this.onChangephone = this.onChangephone.bind(this);
       this.onChangeaddress = this.onChangeaddress.bind(this);
       this.onChangepincode = this.onChangepincode.bind(this);
@@ -36,16 +37,16 @@ export default class reg_buyer extends Component {
       this.setState({ password: event.target.value });
   }
 
-  onChangesecondpassword(event) {
-      this.setState({ secondpassword: event.target.value });
+  onChangeconfirm_password(event) {
+      this.setState({ confirm_password: event.target.value });
   }
 
   onChangeemail(event) {
       this.setState({ email: event.target.value });
   }
 
-  onChangeshop(event) {
-      this.setState({ shop: event.target.value });
+  onChangeshopname(event) {
+      this.setState({ shopname: event.target.value });
   }
 
   onChangephone(event) {
@@ -64,29 +65,31 @@ export default class reg_buyer extends Component {
       e.preventDefault();
 
       const newUser = {
+          user_type:this.state.user_type,
           username: this.state.username,
           password: this.state.password,
-          secondpassword: this.state.secondpassword,
+          confirm_password: this.state.confirm_password,
+          shopname:this.state.shopname,
           email: this.state.email,
-          shop:this.state.shop,
           phone: this.state.phone,
           address:this.state.address,
           pincode:this.state.pincode
       }
       console.log(newUser.user_type)
 
-      axios.post('http://localhost:4000/add', newUser)
+      axios.post('http://localhost:4000/seller', newUser)
           .then(res =>{
               console.log(res.data.msg);
               alert(res.data.msg)
           });
 
       this.setState({
+          user_type:'Seller',
           username: '',
           password: '',
-          secondpassword: '',
+          confirm_password: '',
+          shopname:'',
           email: '',
-          shop:'',
           phone: '',
           address:'',
           pincode:''
@@ -120,8 +123,8 @@ export default class reg_buyer extends Component {
                     <label>Re-enter Password: </label>
                     <input type="text"
                         className="form-control"
-                        value={this.state.secondpassword}
-                        onChange={this.onChangesecondpassword}
+                        value={this.state.confirm_password}
+                        onChange={this.onChangeconfirm_password}
                     />
                 </div>
 
@@ -135,11 +138,11 @@ export default class reg_buyer extends Component {
                 </div>
 
                 <div className="form-group">
-                    <label>Shopname: </label>
+                    <label>shopname: </label>
                     <input type="text"
                         className="form-control"
-                        value={this.state.shop}
-                        onChange={this.onChangeshop}
+                        value={this.state.shopname}
+                        onChange={this.onChangeshopname}
                     />
                 </div>
 
