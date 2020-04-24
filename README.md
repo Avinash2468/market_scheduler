@@ -1,4 +1,4 @@
-# Bulk-Purchase-App
+# Market Scheduler
 ## Web application based on MERN stack - MongoDB, Express.js, React.js, and Node.js.
 
 ## Setup
@@ -37,7 +37,7 @@ Mongo will be running on port 27017.
 To create a database:
 ```
 mongo
-``` 
+```
 This will open the mongo shell. Type in ```use users``` to create a new database called users.
 
 Run Express:
@@ -54,4 +54,3 @@ npm install
 npm start
 ```
 Navigate to localhost:3000/ in your browser to access the app.
-
