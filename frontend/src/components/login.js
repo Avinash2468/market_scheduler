@@ -54,8 +54,8 @@ export default class Login extends Component {
                   localStorage.setItem("pincode",res.data.pincode);
                   console.log("Hello amigo");
                   if(res.data.type=== "Seller"){
-                      alert(res.data.user_type);
-                      this.props.history.push("/buyer_view");
+                      //(res.data.user_type);
+                      this.props.history.push("/seller_view");
                   }
                   else{
                     console.log("you have logged in boy");

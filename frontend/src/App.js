@@ -6,7 +6,8 @@ import Login from './components/login';
 import reg_buyer from './components/reg_buyer';
 import reg_seller from './components/reg_seller';
 import Home from './components/home';
-import Buyer_view from './components/buyer_view'
+import Buyer_view from './components/buyer_view';
+import Seller_view from './components/seller_view';
 function App() {
   return (
     <Router>
@@ -26,6 +27,7 @@ function App() {
         </nav>
         <Route path="/home" component={Home}/>
         <Route path="/buyer_view" component={Buyer_view}/>
+        <Route path="/seller_view" component={Seller_view}/>
         </div>
     </Router>
   );
