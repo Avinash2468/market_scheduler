@@ -21,8 +21,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connection to mongodb
-mongoose.connect('mongodb+srv://rahul0805:rahul0805@bioproj-jbih7.gcp.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
-// mongoose.connect('mongodb://127.0.0.1:27017/products', { useNewUrlParser: true });
+//mongoose.connect('mongodb+srv://rahul0805:rahul0805@bioproj-jbih7.gcp.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
+ mongoose.connect('mongodb://127.0.0.1:27017/users', { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function () {
     console.log("MongoDB database connection established succesfully.");
@@ -176,11 +176,12 @@ userRoutes.route('/login').post(function (req, res) {
     let send={
         status:"-1",
         msg:"temp",
-        type:""
+        type:"",
+        pincode:""
     };
 
    //const {Username,Password,user_type}=req.body;
-      let Username = req.body.username;
+    let Username = req.body.username;
     let Password = req.body.password;
     let user_type = req.body.user_type;
 
@@ -204,7 +205,8 @@ userRoutes.route('/login').post(function (req, res) {
                     else{
                         send.msg="Credentials Valid";
                         send.status="0";
-                        send.type=user.user_type
+                        send.type=user.user_type,
+                        send.pincode=user.pincode,
                         res.json(send)
                     }
                 })
@@ -404,7 +406,7 @@ userRoutes.route("/buyer/products").post(function(req,res){
 
     let {seller_name,ref} = req.body;
 
-    // all fields need to be present
+    console.log(seller_name);
     ref = ref + ".*";
     if(!ref){
         send.status=4;

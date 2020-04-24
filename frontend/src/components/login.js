@@ -52,7 +52,7 @@ export default class Login extends Component {
               if (res.data.status === "0") {
                   localStorage.setItem("user", newUser.username);
                   localStorage.setItem("pincode",res.data.pincode);
-                  console.log("Hello amigo");
+                  console.log("Hello my amigo"+res.data.pincode);
                   if(res.data.type=== "Seller"){
                       //(res.data.user_type);
                       this.props.history.push("/seller_view");
