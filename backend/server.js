@@ -31,6 +31,7 @@ connection.once('open', function () {
 
 // Getting all the users
 userRoutes.route('/').get(function (req, res) {
+  console.log("lolmr");
     Seller.find(function (err, users) {
         if (err) {
             console.log(err);
@@ -173,24 +174,27 @@ userRoutes.route('/seller').post(function (req, res) {
 
 // Login an existing user
 userRoutes.route('/login').post(function (req, res) {
-
+    //console.log("We be logging in yo");
     let send={
         status:"-1",
         msg:"temp",
-        type:""
+        type:"",
+        pincode:""
     };
-
+    console.log("AHHHHHHHHHHHHHH");
    //const {Username,Password,user_type}=req.body;
+   //const { user_type,username, password,confirm_password ,shopname,email,phone,address,pincode} = req.body;
     let Username = req.body.username;
     let Password = req.body.password;
     let user_type = req.body.user_type;
-
+    console.log("The Username is"+Username);
     if(user_type=='Buyer'){
     Buyer.findOne({ username: Username })
         .then(user => {
             if (!user) {
                 send.msg="User does not exist";
                 send.status="2";
+                send.type=user_type;
                 res.json(send)
             }
 
@@ -206,6 +210,7 @@ userRoutes.route('/login').post(function (req, res) {
                         send.msg="Credentials Valid";
                         send.status="0";
                         send.type=user.user_type;
+                        send.pincode = user.pincode;
                         res.json(send)
                     }
                 })
@@ -217,6 +222,7 @@ userRoutes.route('/login').post(function (req, res) {
             if (!user) {
                 send.msg="User does not exist";
                 send.status="2";
+                send.type=user_type;
                 res.json(send)
             }
 
@@ -345,8 +351,8 @@ userRoutes.route('/buyer/view').post(function (req, res){
         status:"-1",
         msg:"temp"
     };
-    const {pincode}=req.body;
-    Seller.find({pincode:pincode},function(err,users){
+    console.log("The pincode sent to the server is "+req.body.pincode);
+    Seller.find({pincode:req.body.pincode},function(err,users){
         if(err) throw err;
         res.json(users);
     });
