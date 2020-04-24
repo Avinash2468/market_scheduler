@@ -26,11 +26,11 @@ export default class Buyer_view extends Component {
         return (
           <div>
           {this.state.lolol.map((usermeh, index) => (
-            <div key={index}>
-              <h3>{usermeh.username}</h3>
-              <p>{usermeh.shopname}</p>
-              <p>{usermeh.phone}</p>
-            </div>
+            <ul>
+              <a href="/buyer_view_items"><h1>{usermeh.username}</h1></a>
+              <li>{usermeh.shopname}</li>
+              <li>{usermeh.phone}</li>
+            </ul>
           ))}
           </div>
         );
