@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, ReactDOM } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from 'axios';
+import Buyer_view from './buyer_view.js';
 export default class Login extends Component {
 
   constructor(props) {
@@ -46,18 +48,22 @@ export default class Login extends Component {
 
       axios.post('http://localhost:4000/login', newUser)
           .then(res => {
-              console.log(res)
+              console.log("lolol");
               if (res.data.status === "0") {
-                  localStorage.setItem("user", newUser.username)
+                  localStorage.setItem("user", newUser.username);
+                  localStorage.setItem("pincode",res.data.pincode);
+                  console.log("Hello amigo");
                   if(res.data.type=== "Seller"){
-                      this.props.history.push("/seller/seller_home");
+                      alert(res.data.user_type);
+                      this.props.history.push("/buyer_view");
                   }
                   else{
-                      this.props.history.push("/buyer/buyer_home");
+                    console.log("you have logged in boy");
+                      this.props.history.push("/buyer_view");
                   }
               }
               else{
-                  alert(res.data.msg)
+                  console.log(res.data.user_type);
               }
           });
 
@@ -66,7 +72,7 @@ export default class Login extends Component {
           password: '',
           user_type:''
       });
-        }
+    }
 
     render() {
         return (

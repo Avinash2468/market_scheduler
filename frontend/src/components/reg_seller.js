@@ -68,7 +68,7 @@ export default class reg_seller extends Component {
           user_type:this.state.user_type,
           username: this.state.username,
           password: this.state.password,
-          confirm_password: this.state.confirm_password,
+            confirm_password: this.state.confirm_password,
           shopname:this.state.shopname,
           email: this.state.email,
           phone: this.state.phone,
