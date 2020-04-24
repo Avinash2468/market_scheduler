@@ -8,6 +8,7 @@ import reg_seller from './components/reg_seller';
 import Home from './components/home';
 import Buyer_view from './components/buyer_view';
 import Seller_view from './components/seller_view';
+import Buyer_view_items from './components/buyer_view_items';
 function App() {
   return (
     <Router>
@@ -28,6 +29,7 @@ function App() {
         <Route path="/home" component={Home}/>
         <Route path="/buyer_view" component={Buyer_view}/>
         <Route path="/seller_view" component={Seller_view}/>
+        <Route path="/buyer_view_items" component={Buyer_view_items}/>
         </div>
     </Router>
   );
