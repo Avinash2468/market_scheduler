@@ -13,7 +13,8 @@ const userRoutes = express.Router();
 let Buyer = require('./models/buyer');
 let Seller = require('./models/seller');
 let Products = require('./models/products');
-//let Bookings = require('./models/bookings');
+let Bookings = require('./models/bookings');
+let Cart = require('./models/cart');
 //let Reviews = require('./models/reviews');
 
 app.use(cors());
@@ -237,6 +238,39 @@ userRoutes.route('/login').post(function (req, res) {
     }
 });
 
+
+
+//seller to view his products
+userRoutes.route("/seller/view").post(function(req,res){
+
+    let send={
+        status:"-1",
+        msg:"temp"
+    };
+
+    let {seller_name,ref} = req.body;
+
+    // all fields need to be present
+     ref = ref + ".*";
+    if(!ref){
+        send.status=4;
+            send.msg="Not working bitch";
+        res.json(send) 
+        return;
+    }
+
+
+     Products.find({name:{ $regex : ref, $options: "i" },seller_id:seller_name},function(err, product) {
+        if(err) throw err;
+        res.json(product);
+    });
+
+
+
+});
+
+
+
 //seller to add product
 userRoutes.route('/seller/addproduct').post(function(req,res){
 
@@ -306,16 +340,16 @@ userRoutes.route("/seller/update").post(function(req,res){
         msg:"temp"
     };
 
-    const { name,price,company,quantity,items_left, seller_id } = req.body;
+    const { id,items_left } = req.body;
 
     // all fields need to be present
-    if (!name || !quantity || !price || !seller_id) {
+    if (!id){
         send.msg="Incomplete fields";
         send.status="2";
         res.json(send)
     }
 
-     Products.findOneAndUpdate({name: name,company:company,quantity: quantity, seller_name: seller_id}, function(err, product) {
+     Products.findOneAndUpdate({_id: id}, {$set :{"items_left": items_left}},function(err, product) {
         if (err){
             console.log(err);
             send.status=1;
@@ -343,8 +377,16 @@ userRoutes.route('/buyer/view').post(function (req, res){
         status:"-1",
         msg:"temp"
     };
-    const {pincode}=req.body;
-    Seller.find({pincode:pincode},function(err,users){
+    //let ref = "";
+    let {pincode,ref}=req.body;
+    ref = ref + ".*";
+    if(!ref){
+        send.status=4;
+            send.msg="Not working bitch";
+        res.json(send) 
+        return;
+    }
+    Seller.find({username:{ $regex : ref, $options: "i" },pincode:pincode},{"username" :1, "shopname":1, "phone":1, "address":1, "sum_ratings":1},function(err,users){
         if(err) throw err;
         res.json(users);
     });
@@ -352,6 +394,122 @@ userRoutes.route('/buyer/view').post(function (req, res){
 });
 
 
+//Buyer to view products
+userRoutes.route("/buyer/products").post(function(req,res){
+
+    let send={
+        status:"-1",
+        msg:"temp"
+    };
+
+    let {seller_name,ref} = req.body;
+
+    // all fields need to be present
+    ref = ref + ".*";
+    if(!ref){
+        send.status=4;
+            send.msg="Not working bitch";
+        res.json(send) 
+        return;
+    }
+
+     Products.find({name:{ $regex : ref, $options: "i" },seller_id:seller_name},function(err, product) {
+        if(err) throw err;
+        res.json(product);
+    });
+
+
+
+});
+
+
+
+userRoutes.route("/buyer/cart").post(function(req,res){
+
+    let send={
+        status:"-1",
+        msg:"temp"
+    };
+    const {idi,prod_id,buyer_id,seller_id} = req.body;
+  
+
+ /*  const newcart = new Cart({
+    		product:({id:"afafsdg",num:6969}),
+    		buyer_name:buyer_id,
+    		seller_id,
+    		price:1233,
+    		quantity_total:1,
+    		status:"yo!"
+    	});
+    	*/
+    	//res.json(newcart) ;
+    	  //return;
+  		        /*const newcart = new Products({
+                                name:prod_id,
+                                price:123,
+                                quantity:13132,
+                                quantity_left:1332,
+                                seller_id:seller_id,
+                                status:"Available"
+                            });
+*/
+
+    //if(!idi){
+  //  	newcart.save();
+    //	     }
+    //Cart.update({buyer_name:buyer_id},{$push:{product:{id:prod_id,num:696}}});
+    //Cart.update({buyer_name:buyer_id},{$push:{product:{id:prod_id,num:6966}}});
+    
+
+        /*Cart.find({seller_id: seller_id} ,function(err,item){
+        if(err){
+        
+            console.log(err);
+        }
+        else{
+       
+                if (!item) {
+                            send.msg="Product exists already with this name registered by you - if want to update please click update button";
+                            send.status="3";
+                            res.json(send)
+                }
+
+                else{
+                const newitem = new Cart({
+    		product:[],
+    		buyer_name:buyer_id,
+    		seller_id,
+    		price:12332,
+    		quantity_total:121,
+    		status:"yo bitch!"
+    	});
+                             
+                    newitem.save()
+                     send.msg="yes bitch";
+                            send.status="0";
+                            res.json(newitem)
+                            return;
+                    //send.status = 0;
+                    //send.msg = "Successfully Added Product";
+                    //res.json(msg)
+
+
+                }
+        }
+
+    })*/
+send.msg="yes bitch";
+                            send.status="10";
+Cart.update({buyer_name:buyer_id},{$push:{product:{id:prod_id,num:69678}}}, function(err,cart){
+ if(err) throw err;
+        res.json(cart);
+})
+
+
+
+
+
+});
 
 
 app.use('/', userRoutes);
